@@ -73,3 +73,6 @@ __logger/*
 
 # Localstack data
 .Localstack
+
+# Visualization data
+./vis-data/*
