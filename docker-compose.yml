@@ -3,6 +3,8 @@ version: '3.2'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper
+    networks:
+      - crypto-network
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -14,6 +16,8 @@ services:
     image: confluentinc/cp-kafka
     depends_on:
       - zookeeper
+    networks:
+      - crypto-network
     ports:
       - 9092:9092
       - 30001:30001
@@ -36,6 +40,8 @@ services:
       - 8080:8080
     links:
       - kafka
+    networks:
+      - crypto-network
     environment:
       JMX_PORT: 30001
       JMX_HOST: kafka
@@ -44,6 +50,8 @@ services:
 
   prometheus:
     build: ./tools/prometheus
+    networks:
+      - crypto-network
     ports:
       - 9090:9090
 
@@ -51,6 +59,8 @@ services:
     image: grafana/grafana
     ports: 
       - 3000:3000
+    networks:
+      - crypto-network
     environment:
       - GF_PATHS_DATA=/var/lib/grafana
       - GF_DEFAULT_THEME=light
@@ -61,7 +71,7 @@ services:
     image: bde2020/spark-master:2.2.2-hadoop2.7
     container_name: spark-master
     networks:
-      - kinesis-app
+      - crypto-network
     volumes:
       - ./connectors:/connectors
       - ./:/scripts/
@@ -75,7 +85,7 @@ services:
     image: bde2020/spark-worker:2.2.2-hadoop2.7
     container_name: spark-worker-1
     networks:
-      - kinesis-app
+      - crypto-network
     depends_on:
       - spark-master
     ports:
@@ -84,5 +94,5 @@ services:
       - 'SPARK_MASTER=spark://spark-master:7077'
 
 networks: 
-  kinesis-app:
+  crypto-network:
     driver: 'bridge'

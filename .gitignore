@@ -76,3 +76,9 @@ __logger/*
 
 # Visualization data
 ./vis-data/*
+
+# IntelliJ
+*.iml
+
+# Archive files
+/archive/

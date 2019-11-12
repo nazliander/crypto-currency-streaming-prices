@@ -1,5 +1,5 @@
 import requests
-from utils import set_logger, current_milli_time, config_reader
+from utils import set_logger, current_milli_time
 
 
 LOGGER = set_logger("repository_logger")
@@ -21,11 +21,10 @@ class CryptoAPI:
                     "totalSupply": coin["totalSupply"],
                     "price": coin["price"],
                     "timestamp_logger": current_milli_time()}
-            # In the API milli seconds are used.
+            # In the API milliseconds are used.
         except Exception as e:
             LOGGER.info(
-                f"The current coin with name has "
-                "defected dict keys. Exception says: {exception}")
+                f"Exception : {e}")
             return {}
 
     def get_all_coins_with_model(self, all_coins):
