@@ -7,7 +7,7 @@ from json import dumps
 from confluent_kafka import Producer
 
 from utils import (
-    create_key_from_str, set_logger, config_reader, acked)
+    set_logger, config_reader, acked)
 from crypto_repository import CryptoAPI
 
 
@@ -21,10 +21,10 @@ CONFIG_PATH = os.path.join(
 KAFKA_CONFIG_DICT = config_reader(
     CONFIG_PATH, "kafka")
 CRYPTO_TOPIC = config_reader(
-    CONFIG_PATH, "app.settings")["topic"]
+    CONFIG_PATH, "app.settings")["topic_raw"]
 
 
-def produce_list_of_dict_into_kafka(list_of_dict): 
+def produce_list_of_dict_into_kafka(list_of_dict):
     producer = Producer(KAFKA_CONFIG_DICT)
     for coin_with_model in list_of_dict:
         coin_name = coin_with_model["nameCoin"]
@@ -37,7 +37,7 @@ def produce_list_of_dict_into_kafka(list_of_dict):
         except Exception as e:
             LOGGER.info(
                 f"There is a problem with the {coin_name}\n"
-                 "The problem is: {e}!")
+                f"The problem is: {e}!")
 
 
 if __name__ == "__main__":

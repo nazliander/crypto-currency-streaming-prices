@@ -10,14 +10,13 @@ import string
 
 PARENT_PATH = os.fspath(Path(__file__).parents[0])
 LOGGING_FILE_PATH = os.path.join(PARENT_PATH,
-                                 "__logger",
-                                 "{}.log")
+    "__logger", "{}.log")
 
 
 def current_milli_time(): return int(round(time.time() * 1000))
 
 
-def create_key_from_str(string): 
+def create_key_from_str(string):
     now = str(current_milli_time())
     return f"{string}.{now}"
 
@@ -26,7 +25,7 @@ def acked(err, msg):
     if err is not None:
         print(f"Failed to deliver message: {msg}: {err}")
     else:
-        print(f"Message produced: {msg}")
+        print(f"Message produced for Kafka message object...")
 
 
 def config_reader(file_path, section):

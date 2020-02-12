@@ -13,18 +13,18 @@ class CryptoAPI:
 
     def get_coin_model(self, coin):
         try:
-            return {"nameCoin": coin["name"],
-                    "symbolCoin": coin["symbol"],
-                    "numberOfMarkets": coin["numberOfMarkets"],
-                    "volume": coin["volume"],
-                    "marketCap": coin["marketCap"],
-                    "totalSupply": coin["totalSupply"],
-                    "price": coin["price"],
+            return {"nameCoin": coin.get("name"),
+                    "symbolCoin": coin.get("symbol"),
+                    "numberOfMarkets": coin.get("numberOfMarkets"),
+                    "volume": coin.get("volume"),
+                    "marketCap": coin.get("marketCap"),
+                    "totalSupply": coin.get("totalSupply"),
+                    "price": coin.get("price"),
                     "timestamp_logger": current_milli_time()}
             # In the API milliseconds are used.
         except Exception as e:
             LOGGER.info(
-                f"Exception : {e}")
+                f"Exception: {e}")
             return {}
 
     def get_all_coins_with_model(self, all_coins):

@@ -22,7 +22,7 @@ services:
       - 9092:9092
       - 30001:30001
     environment:
-      KAFKA_CREATE_TOPICS: crypto
+      KAFKA_CREATE_TOPICS: crypto_raw,crypto_latest_trends,crypto_moving_average
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
