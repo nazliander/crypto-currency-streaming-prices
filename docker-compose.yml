@@ -1,5 +1,5 @@
 ---
-version: '3.2'
+version: "3.2"
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper
@@ -34,38 +34,38 @@ services:
       KAFKA_JMX_PORT: 30001
       KAFKA_JMX_HOSTNAME: kafka
 
-  kafka-jmx-exporter:
-    build: ./tools/prometheus-jmx-exporter
-    ports:
-      - 8080:8080
-    links:
-      - kafka
-    networks:
-      - crypto-network
-    environment:
-      JMX_PORT: 30001
-      JMX_HOST: kafka
-      HTTP_PORT: 8080
-      JMX_EXPORTER_CONFIG_FILE: kafka.yml
+  # kafka-jmx-exporter:
+  #   build: ./tools/prometheus-jmx-exporter
+  #   ports:
+  #     - 8080:8080
+  #   links:
+  #     - kafka
+  #   networks:
+  #     - crypto-network
+  #   environment:
+  #     JMX_PORT: 30001
+  #     JMX_HOST: kafka
+  #     HTTP_PORT: 8080
+  #     JMX_EXPORTER_CONFIG_FILE: kafka.yml
 
-  prometheus:
-    build: ./tools/prometheus
-    networks:
-      - crypto-network
-    ports:
-      - 9090:9090
+  # prometheus:
+  #   build: ./tools/prometheus
+  #   networks:
+  #     - crypto-network
+  #   ports:
+  #     - 9090:9090
 
-  grafana:
-    image: grafana/grafana
-    ports: 
-      - 3000:3000
-    networks:
-      - crypto-network
-    environment:
-      - GF_PATHS_DATA=/var/lib/grafana
-      - GF_DEFAULT_THEME=light
-    volumes:
-      - ./vis-data/grafana:/var/lib/grafana
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - crypto-network
+  #   environment:
+  #     - GF_PATHS_DATA=/var/lib/grafana
+  #     - GF_DEFAULT_THEME=light
+  #   volumes:
+  #     - ./vis-data/grafana:/var/lib/grafana
 
   spark-master:
     image: bde2020/spark-master:2.2.2-hadoop2.7
@@ -91,8 +91,17 @@ services:
     ports:
       - 8083:8081
     environment:
-      - 'SPARK_MASTER=spark://spark-master:7077'
+      - "SPARK_MASTER=spark://spark-master:7077"
 
-networks: 
+  producer:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.producer
+    depends_on:
+      - kafka
+    networks:
+      - crypto-network
+
+networks:
   crypto-network:
-    driver: 'bridge'
+    driver: "bridge"
