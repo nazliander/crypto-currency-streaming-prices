@@ -1,2 +1,3 @@
 # crypto-currency-streaming-prices
-A Python project for analysing real-time crypto-currency prices using Kinesis and Spark.
+
+A Python project for analysing real-time crypto-currency prices using Kafka and Spark Structured Streaming.
