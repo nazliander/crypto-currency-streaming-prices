@@ -47,5 +47,6 @@ if __name__ == "__main__":
         coins_with_model = crypto_api.get_all_coins_with_model(all_coins)
         produce_list_of_dict_into_kafka(coins_with_model)
         LOGGER.info(f"Produced into Kafka topic: {CRYPTO_TOPIC}.")
+        LOGGER.info(f"Produced into Kafka topic: {str(coins_with_model)}.")
         LOGGER.info(f"Waiting for the next round...")
-        time.sleep(5)
+        time.sleep(10)
