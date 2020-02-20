@@ -82,3 +82,7 @@ __logger/*
 
 # Archive files
 /archive/
+
+/tmp_data/
+/data/*
+/spark-jars/*

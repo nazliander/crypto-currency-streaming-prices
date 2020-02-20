@@ -9,8 +9,7 @@ import string
 
 
 PARENT_PATH = os.fspath(Path(__file__).parents[0])
-LOGGING_FILE_PATH = os.path.join(PARENT_PATH,
-    "__logger", "{}.log")
+LOGGING_FILE_PATH = os.path.join(PARENT_PATH, "__logger", "{}.log")
 
 
 def current_milli_time(): return int(round(time.time() * 1000))
@@ -52,7 +51,7 @@ def set_logger(file_path_extension):
         handlers=[
             logging.FileHandler(
                 LOGGING_FILE_PATH.format(file_path_extension)
-                ),
+            ),
             logging.StreamHandler()
         ])
     return logging

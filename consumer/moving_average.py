@@ -14,21 +14,21 @@ def connect_to_kafka_stream(topic_name, spark_session):
             .load())
 
 
-# TODO: There is a bug for nameCoin - some of the coins are inserted as NULL
 def calculate_simple_moving_average(dataframe):
     w = window(
         timeColumn="date_time",
-        windowDuration="30 seconds",
-        slideDuration="10 seconds")
-    return (df.selectExpr("CAST(value AS STRING) AS json")
+        windowDuration="60 seconds",
+        slideDuration="20 seconds")
+    # Milliseconds to UTC
+    return (df
+            .selectExpr("CAST(value AS STRING) AS json")
             .select(
                 from_json(col("json"), crypto_model_schema).alias("data"))
             .select(
                 "data.*",
                 (col("data.timestamp_logger")/1000).cast(
                     "timestamp").alias("date_time"))
-            # .where("nameCoin IS NOT NULL")
-            .withWatermark("date_time", "10 seconds")
+            .withWatermark("date_time", "20 seconds")
             .groupBy(col("nameCoin"), w)
             .agg(avg("price"))
             .select(
@@ -39,17 +39,17 @@ def calculate_simple_moving_average(dataframe):
 
 
 if __name__ == "__main__":
-
     s = Source()
     s.sc.setLogLevel("ERROR")
     df = connect_to_kafka_stream(
         topic_name="crypto_raw", spark_session=s.spark)
     crypto_values = calculate_simple_moving_average(df)
+
     query = (crypto_values
-            .writeStream
-            .option("truncate", "false")
-            .outputMode("append")
-            .format("console")
-            .start()
-            )
+             .writeStream
+             .option("truncate", "false")
+             .outputMode("append")
+             .format("console")
+             .start()
+             )
     query.awaitTermination()
