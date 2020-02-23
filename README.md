@@ -1,4 +1,4 @@
-# Spark Structured Streaming Project for Crytocurrency Prices
+# Spark Structured Streaming Project for Cryptocurrency Prices
 
 A Python project for analysing real-time crypto-currency prices using Kafka and Spark Structured Streaming.
 
