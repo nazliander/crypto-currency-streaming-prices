@@ -94,6 +94,8 @@ services:
       - kafka
     networks:
       - crypto-network
+    volumes:
+      - ./producer:/app
 
 networks:
   crypto-network:

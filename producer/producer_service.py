@@ -8,10 +8,11 @@ from confluent_kafka import Producer
 
 from utils import (
     set_logger, config_reader, acked)
-from crypto_repository import CryptoAPI
+from nft_repository import NFTPortAPI
 
 
-COIN_PAGE = "https://api.coinranking.com/v1/public/coins"
+NFT_PAGE = "https://api.nftport.xyz/v0/nfts"
+NFT_PORT_API_KEY = "b4b89ab2-20e7-435a-8d3b-808c5d419703"
 LOGGER = set_logger("producer_logger")
 PARENT_PATH = os.fspath(Path(__file__).parents[1])
 CONFIG_PATH = os.path.join(
@@ -20,32 +21,32 @@ CONFIG_PATH = os.path.join(
     "settings.ini")
 KAFKA_CONFIG_DICT = config_reader(
     CONFIG_PATH, "kafka")
-CRYPTO_TOPIC = config_reader(
+NFT_TOPIC = config_reader(
     CONFIG_PATH, "app.settings")["topic_raw"]
 
 
-def produce_list_of_coin_dict_into_kafka(list_of_dict):
+def produce_list_of_nft_dict_into_kafka(list_of_dict):
     producer = Producer(KAFKA_CONFIG_DICT)
-    for coin_with_model in list_of_dict:
-        coin_name = coin_with_model["nameCoin"]
+    for nft_with_model in list_of_dict:
+        nft_name = nft_with_model["nameNft"]
         try:
             producer.produce(
-                topic=CRYPTO_TOPIC,
-                value=dumps(coin_with_model).encode("utf-8"),
+                topic=NFT_TOPIC,
+                value=dumps(nft_with_model).encode("utf-8"),
                 callback=acked)
             producer.poll(1)
         except Exception as e:
             LOGGER.info(
-                f"There is a problem with the {coin_name}\n"
+                f"There is a problem with the {nft_name}\n"
                 f"The problem is: {e}!")
 
 
 if __name__ == "__main__":
-    crypto_api = CryptoAPI()
+    nft_api = NFTPortAPI()
     while True:
-        all_coins, status = crypto_api.get_json_api(COIN_PAGE)
-        coins_with_model = crypto_api.get_all_coins_with_model(all_coins)
-        produce_list_of_coin_dict_into_kafka(coins_with_model)
-        LOGGER.info(f"Produced into Kafka topic: {CRYPTO_TOPIC}.")
+        all_nfts, status = nft_api.get_json_api(NFT_PAGE,NFT_PORT_API_KEY)
+        nfts_with_model = nft_api.get_all_nfts_with_model(all_nfts)
+        produce_list_of_nft_dict_into_kafka(nfts_with_model)
+        LOGGER.info(f"Produced into Kafka topic: {NFT_TOPIC}.")
         LOGGER.info(f"Waiting for the next round...")
         time.sleep(10)
